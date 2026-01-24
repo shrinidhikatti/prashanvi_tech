@@ -2,80 +2,82 @@ import { Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export function Header() {
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-    const navLinks = [
-        { name: 'Home', href: '#hero' },
-        { name: 'Services', href: '#services' },
-        { name: 'Portfolio', href: '#portfolio' },
-        { name: 'Timeline', href: '#timeline' },
-    ];
+  const navLinks = [
+    { name: 'Home', href: '#hero' },
+    { name: 'Services', href: '#services' },
+    { name: 'Portfolio', href: '#portfolio' },
+    { name: 'Timeline', href: '#timeline' },
+  ];
 
-    return (
-        <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
-            <div className="container header-container">
-                <div className="logo">
-                    Prashanvi<span className="text-primary">Tech</span>
-                </div>
+  return (
+    <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
+      <div className="container header-container">
+        <div className="logo">
+          <img src="/logo1.jpeg" alt="Prashanvi Tech Logo" className="logo-img" />
+          <span>Prashanvi<span className="text-primary">Tech</span></span>
+        </div>
 
-                <nav className="desktop-nav">
-                    {navLinks.map((link) => (
-                        <a key={link.name} href={link.href} className="nav-link">
-                            {link.name}
-                        </a>
-                    ))}
-                    <a href="#contact" className="btn btn-primary">Contact Us</a>
-                </nav>
+        <nav className="desktop-nav">
+          {navLinks.map((link) => (
+            <a key={link.name} href={link.href} className="nav-link">
+              {link.name}
+            </a>
+          ))}
+          <a href="#contact" className="btn btn-primary">Contact Us</a>
+        </nav>
 
-                <button
-                    className="mobile-menu-btn"
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                >
-                    {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                </button>
+        <button
+          className="mobile-menu-btn"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
 
-                {isMobileMenuOpen && (
-                    <nav className="mobile-nav">
-                        {navLinks.map((link) => (
-                            <a
-                                key={link.name}
-                                href={link.href}
-                                className="mobile-nav-link"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                            >
-                                {link.name}
-                            </a>
-                        ))}
-                        <a
-                            href="#contact"
-                            className="btn btn-primary"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                            Contact Us
-                        </a>
-                    </nav>
-                )}
-            </div>
+        {isMobileMenuOpen && (
+          <nav className="mobile-nav">
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                className="mobile-nav-link"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {link.name}
+              </a>
+            ))}
+            <a
+              href="#contact"
+              className="btn btn-primary"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Contact Us
+            </a>
+          </nav>
+        )}
+      </div>
 
-            <style jsx>{`
+      <style jsx>{`
         .header {
-          position: fixed;
+          position: sticky;
           top: 0;
           left: 0;
           width: 100%;
           z-index: 1000;
           padding: 1.5rem 0;
           transition: all 0.3s ease;
-          background: transparent;
+          background: var(--white);
+          box-shadow: var(--shadow);
         }
 
         .header.scrolled {
@@ -95,6 +97,15 @@ export function Header() {
           font-size: 1.5rem;
           font-weight: 800;
           color: var(--secondary);
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .logo-img {
+          height: 40px;
+          width: auto;
+          border-radius: 8px;
         }
 
         .desktop-nav {
@@ -141,6 +152,6 @@ export function Header() {
           .mobile-menu-btn { display: block; }
         }
       `}</style>
-        </header>
-    );
+    </header>
+  );
 }

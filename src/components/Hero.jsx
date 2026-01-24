@@ -2,62 +2,62 @@ import { ArrowRight, Code } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export function Hero() {
-    return (
-        <section id="hero" className="hero-section">
-            <div className="container hero-container">
-                <motion.div
-                    className="hero-content"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                >
-                    <span className="badge">Software Development Firm</span>
-                    <h1>
-                        Digitizing Your <br />
-                        <span className="text-primary">Vision</span> into Reality
-                    </h1>
-                    <p className="subtitle">
-                        We build premium digital products for ambitious brands.
-                        From robust web applications to stunning mobile experiences,
-                        Prashanvi Tech is your partner in innovation.
-                    </p>
-                    <div className="cta-group">
-                        <a href="#contact" className="btn btn-primary">
-                            Start a Project <ArrowRight size={18} style={{ marginLeft: '8px' }} />
-                        </a>
-                        <a href="#portfolio" className="btn btn-light">
-                            View Our Work
-                        </a>
-                    </div>
-                </motion.div>
+  return (
+    <section id="hero" className="hero-section">
+      <div className="container hero-container">
+        <motion.div
+          className="hero-content"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <span className="badge">Software Development Firm</span>
+          <h1>
+            Digitizing Your <br />
+            <span className="text-primary">Vision</span> into Reality
+          </h1>
+          <p className="subtitle">
+            We build premium digital products for ambitious brands.
+            From robust web applications to stunning mobile experiences,
+            Prashanvi Tech is your partner in innovation.
+          </p>
+          <div className="cta-group">
+            <a href="#contact" className="btn btn-primary">
+              Start a Project <ArrowRight size={18} style={{ marginLeft: '8px' }} />
+            </a>
+            <a href="#portfolio" className="btn btn-light">
+              View Our Work
+            </a>
+          </div>
+        </motion.div>
 
-                <motion.div
-                    className="hero-visual"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                >
-                    <div className="visual-card main-card">
-                        <Code size={48} color="white" />
-                        <h3>Modern Tech</h3>
-                        <p>React, Next.js, Node</p>
-                    </div>
-                    <div className="visual-card float-card-1">
-                        <span>🚀 High Performance</span>
-                    </div>
-                    <div className="visual-card float-card-2">
-                        <span>🎨 Premium Design</span>
-                    </div>
-                </motion.div>
-            </div>
+        <motion.div
+          className="hero-visual"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <div className="visual-card main-card">
+            <Code size={48} color="white" />
+            <h3>Modern Tech</h3>
+            <p>React, Next.js, Node</p>
+          </div>
+          <div className="visual-card float-card-1">
+            <span>🚀 High Performance</span>
+          </div>
+          <div className="visual-card float-card-2">
+            <span>🎨 Premium Design</span>
+          </div>
+        </motion.div>
+      </div>
 
-            <style jsx>{`
+      <style jsx>{`
         .hero-section {
-          padding: 8rem 0 5rem;
-          min-height: 90vh;
+          padding: 4rem 0 5rem;
+          min-height: 80vh;
           display: flex;
           align-items: center;
-          background: radial-gradient(circle at top right, #fff1ec, transparent 40%);
+          background: url('/a.jpeg') center/cover no-repeat;
         }
 
         .hero-container {
@@ -172,6 +172,6 @@ export function Hero() {
           .hero-visual { width: 100%; margin-top: 2rem; }
         }
       `}</style>
-        </section>
-    );
+    </section>
+  );
 }
