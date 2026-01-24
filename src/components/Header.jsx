@@ -24,7 +24,9 @@ export function Header() {
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
       <div className="container header-container">
         <div className="logo">
-          <img src="/logo1.jpeg" alt="Prashanvi Tech Logo" className="logo-img" />
+          <div className="logo-wrapper" style={{ margin: 0, padding: 0, display: 'flex' }}>
+            <img src="/logo1.jpeg" alt="Prashanvi Tech Logo" className="logo-img" />
+          </div>
           <span>Prashanvi<span className="text-primary">Tech</span></span>
         </div>
 
@@ -74,7 +76,7 @@ export function Header() {
           left: 0;
           width: 100%;
           z-index: 1000;
-          padding: 1.5rem 0;
+          padding: .5rem 0;
           transition: all 0.3s ease;
           background: var(--white);
           box-shadow: var(--shadow);
@@ -83,7 +85,7 @@ export function Header() {
         .header.scrolled {
           background: rgba(255, 255, 255, 0.9);
           backdrop-filter: blur(10px);
-          padding: 1rem 0;
+          padding: .4rem 0;
           box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
@@ -103,7 +105,7 @@ export function Header() {
         }
 
         .logo-img {
-          height: 40px;
+          height: 60px;
           width: auto;
           border-radius: 8px;
         }

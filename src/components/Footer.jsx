@@ -1,22 +1,22 @@
 export function Footer() {
-    return (
-        <footer className="footer">
-            <div className="container">
-                <div className="footer-content">
-                    <div className="brand">
-                        <span className="logo-text">Prashanvi<span className="text-primary">Tech</span></span>
-                        <p>© 2024 Prashanvi Tech. All rights reserved.</p>
-                    </div>
+  return (
+    <footer className="footer">
+      <div className="container">
+        <div className="footer-content">
+          <div className="brand">
+            <span className="logo-text">Prashanvi<span className="text-primary">Tech</span></span>
+            <p>© 2026 Prashanvi Tech. All rights reserved.</p>
+          </div>
 
-                    <div className="social-links">
-                        <a href="#">LinkedIn</a>
-                        <a href="#">Twitter</a>
-                        <a href="#">Instagram</a>
-                    </div>
-                </div>
-            </div>
+          <div className="social-links">
+            <a href="#">LinkedIn</a>
+            <a href="#">Twitter</a>
+            <a href="#">Instagram</a>
+          </div>
+        </div>
+      </div>
 
-            <style jsx>{`
+      <style jsx>{`
         .footer {
           background-color: var(--white);
           padding: 2rem 0;
@@ -65,6 +65,6 @@ export function Footer() {
           }
         }
       `}</style>
-        </footer>
-    );
+    </footer>
+  );
 }
