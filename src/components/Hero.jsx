@@ -57,7 +57,7 @@ export function Hero() {
           min-height: 80vh;
           display: flex;
           align-items: center;
-          background: url('/z.jpeg') center/cover no-repeat;
+          background: url('/d.jpeg') center/cover no-repeat;
         }
 
         .hero-container {
