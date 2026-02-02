@@ -17,10 +17,8 @@ export default async function handler(req, res) {
     }
 
     // Send email using Resend
-    // TODO: Once domain is verified, uncomment the line below and remove the onboarding line
-    // from: 'noreply@prashanvitech.com',
     const data = await resend.emails.send({
-      from: 'onboarding@resend.dev', // Change to noreply@prashanvitech.com after domain verification
+      from: 'noreply@prashanvitech.com',
       to: 'prashanvitech@gmail.com',
       reply_to: email, // User's email for easy replies
       subject: `New Contact Form Submission from ${name}`,
