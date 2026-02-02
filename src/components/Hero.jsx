@@ -182,17 +182,48 @@ const DigitalExperience = () => {
                 key="ui-assembly"
                 className="ui-assembly"
               >
+                {/* Ambient Particles */}
+                <div className="assembly-particles">
+                  {[...Array(8)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="assembly-particle"
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{
+                        opacity: [0, 0.6, 0],
+                        scale: [0, 1, 0],
+                        x: [0, (i % 2 === 0 ? 20 : -20)],
+                        y: [0, (i % 3 === 0 ? -30 : 30)]
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        delay: i * 0.4,
+                        ease: "easeInOut"
+                      }}
+                      style={{
+                        left: `${20 + (i * 12)}%`,
+                        top: `${30 + ((i % 3) * 15)}%`
+                      }}
+                    />
+                  ))}
+                </div>
+
                 {/* Profile Card (Moved to Left) */}
                 <motion.div
                   className="ui-card profile-card"
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
+                  whileHover={{ scale: 1.03, y: -5 }}
                 >
+                  <div className="card-glow"></div>
                   <div className="profile-header">
                     <div className="profile-avatar">
                       <User size={20} />
-                      <div className="status-dot"></div>
+                      <div className="status-dot">
+                        <div className="status-ping"></div>
+                      </div>
                     </div>
                     <div className="profile-info">
                       <div className="profile-name">Alex Morgan</div>
@@ -202,6 +233,16 @@ const DigitalExperience = () => {
                   <div className="profile-badge">
                     <CheckCircle size={12} /> <span>Pro Member</span>
                   </div>
+                  <div className="profile-stats">
+                    <div className="profile-stat">
+                      <div className="stat-num">127</div>
+                      <div className="stat-lbl">Projects</div>
+                    </div>
+                    <div className="profile-stat">
+                      <div className="stat-num">4.9</div>
+                      <div className="stat-lbl">Rating</div>
+                    </div>
+                  </div>
                 </motion.div>
 
                 {/* Dashboard Main Card (Top Right) */}
@@ -210,19 +251,43 @@ const DigitalExperience = () => {
                   initial={{ opacity: 0, x: 50, scale: 0.95 }}
                   animate={{ opacity: 1, x: 0, scale: 1 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
+                  whileHover={{ scale: 1.02, y: -5 }}
                 >
+                  <div className="card-glow"></div>
                   <div className="card-header-glass">
-                    <div className="card-title">Dashboard</div>
+                    <div className="card-title">
+                      <BarChart3 size={16} className="header-icon" />
+                      Dashboard
+                    </div>
                     <div className="card-actions">
-                      <Search size={14} />
-                      <Bell size={14} />
+                      <motion.div
+                        whileHover={{ scale: 1.2 }}
+                        className="action-btn"
+                      >
+                        <Search size={14} />
+                      </motion.div>
+                      <motion.div
+                        whileHover={{ scale: 1.2 }}
+                        className="action-btn"
+                      >
+                        <Bell size={14} />
+                        <div className="notification-dot"></div>
+                      </motion.div>
                     </div>
                   </div>
                   <div className="dashboard-content">
                     <div className="stat-group">
                       <div className="stat-label">Total Revenue</div>
                       <div className="stat-value">$12,450.00</div>
-                      <div className="stat-delta">+15.3%</div>
+                      <div className="stat-delta">
+                        <motion.span
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 1 }}
+                        >
+                          +15.3%
+                        </motion.span>
+                      </div>
                     </div>
 
                     {/* SVG Line Chart */}
@@ -230,35 +295,90 @@ const DigitalExperience = () => {
                       <svg viewBox="0 0 300 60" className="w-full h-full overflow-visible">
                         <defs>
                           <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#F97316" stopOpacity="0.25" />
+                            <stop offset="0%" stopColor="#F97316" stopOpacity="0.3" />
                             <stop offset="100%" stopColor="#F97316" stopOpacity="0" />
                           </linearGradient>
+                          <filter id="glow">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge>
+                              <feMergeNode in="coloredBlur"/>
+                              <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                          </filter>
                         </defs>
 
                         {/* Grid Lines */}
-                        <line x1="0" y1="15" x2="300" y2="15" stroke="#f1f5f9" strokeWidth="1" />
-                        <line x1="0" y1="45" x2="300" y2="45" stroke="#f1f5f9" strokeWidth="1" />
+                        <line x1="0" y1="15" x2="300" y2="15" stroke="#f1f5f9" strokeWidth="1" opacity="0.5" />
+                        <line x1="0" y1="45" x2="300" y2="45" stroke="#f1f5f9" strokeWidth="1" opacity="0.5" />
 
                         {/* Area Fill */}
-                        <path
+                        <motion.path
                           d="M0,45 C40,40 60,30 100,30 C140,30 160,50 200,50 C240,50 260,10 300,10 V60 H0 Z"
                           fill="url(#chartGradient)"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.8, delay: 1.2 }}
                         />
 
                         {/* Line Stroke */}
-                        <path
+                        <motion.path
                           d="M0,45 C40,40 60,30 100,30 C140,30 160,50 200,50 C240,50 260,10 300,10"
                           fill="none"
                           stroke="#F97316"
                           strokeWidth="3"
                           strokeLinecap="round"
                           strokeLinejoin="round"
+                          filter="url(#glow)"
+                          initial={{ pathLength: 0 }}
+                          animate={{ pathLength: 1 }}
+                          transition={{ duration: 1.5, delay: 1, ease: "easeInOut" }}
                         />
 
-                        {/* Data Points */}
-                        <circle cx="100" cy="30" r="4" fill="white" stroke="#F97316" strokeWidth="2" />
-                        <circle cx="200" cy="50" r="4" fill="white" stroke="#F97316" strokeWidth="2" />
-                        <circle cx="300" cy="10" r="4" fill="white" stroke="#F97316" strokeWidth="2" />
+                        {/* Animated Data Points */}
+                        <motion.circle
+                          cx="100" cy="30" r="4"
+                          fill="white"
+                          stroke="#F97316"
+                          strokeWidth="2"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: [0, 1.3, 1] }}
+                          transition={{ duration: 0.5, delay: 1.5 }}
+                        />
+                        <motion.circle
+                          cx="200" cy="50" r="4"
+                          fill="white"
+                          stroke="#F97316"
+                          strokeWidth="2"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: [0, 1.3, 1] }}
+                          transition={{ duration: 0.5, delay: 1.7 }}
+                        />
+                        <motion.circle
+                          cx="300" cy="10" r="4"
+                          fill="white"
+                          stroke="#F97316"
+                          strokeWidth="2"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: [0, 1.3, 1] }}
+                          transition={{ duration: 0.5, delay: 1.9 }}
+                        />
+
+                        {/* Pulsing rings on data points */}
+                        <motion.circle
+                          cx="300" cy="10" r="8"
+                          fill="none"
+                          stroke="#F97316"
+                          strokeWidth="2"
+                          animate={{
+                            r: [8, 16],
+                            opacity: [0.6, 0]
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            delay: 2
+                          }}
+                        />
                       </svg>
                     </div>
                   </div>
@@ -270,33 +390,108 @@ const DigitalExperience = () => {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.6 }}
+                  whileHover={{ scale: 1.05, y: -5 }}
                 >
+                  <div className="card-glow"></div>
                   <div className="small-chart-header">
                     <div className="small-chart-label">Active Users</div>
-                    <div className="small-chart-value">2.4k</div>
+                    <div className="small-chart-value">
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1.5 }}
+                      >
+                        2.4k
+                      </motion.span>
+                      <motion.span
+                        className="trend-up"
+                        initial={{ opacity: 0, x: -5 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 1.7 }}
+                      >
+                        ↗
+                      </motion.span>
+                    </div>
                   </div>
                   <div className="small-chart-svg">
                     <svg viewBox="0 0 100 40" className="w-full h-full">
-                      {/* Bar Graph Implementation */}
-                      <rect x="5" y="20" width="10" height="20" rx="2" fill="#d1fae5" />
-                      <rect x="25" y="10" width="10" height="30" rx="2" fill="#6ee7b7" />
-                      <rect x="45" y="15" width="10" height="25" rx="2" fill="#34d399" />
-                      <rect x="65" y="5" width="10" height="35" rx="2" fill="#10B981" />
-                      <rect x="85" y="12" width="10" height="28" rx="2" fill="#059669" />
+                      {/* Animated Bar Graph */}
+                      {[
+                        { x: 5, y: 20, height: 20, delay: 1.6, color: '#fcd9bd' },
+                        { x: 25, y: 10, height: 30, delay: 1.7, color: '#fb923c' },
+                        { x: 45, y: 15, height: 25, delay: 1.8, color: '#f97316' },
+                        { x: 65, y: 5, height: 35, delay: 1.9, color: '#ea580c' },
+                        { x: 85, y: 12, height: 28, delay: 2.0, color: '#c2410c' }
+                      ].map((bar, i) => (
+                        <motion.rect
+                          key={i}
+                          x={bar.x}
+                          y={bar.y}
+                          width="10"
+                          height={bar.height}
+                          rx="2"
+                          fill={bar.color}
+                          initial={{ scaleY: 0, originY: 1 }}
+                          animate={{ scaleY: 1 }}
+                          transition={{ duration: 0.6, delay: bar.delay, ease: "easeOut" }}
+                        />
+                      ))}
                     </svg>
                   </div>
                 </motion.div>
 
-                {/* Connection Lines (Decoration) */}
+                {/* Enhanced Connection Lines */}
                 <svg className="connection-lines">
+                  {/* Profile to Dashboard */}
                   <motion.path
-                    d="M 120 180 L 180 180"
-                    stroke="#F97316"
+                    d="M 140 120 Q 180 120 200 150"
+                    stroke="url(#lineGradient1)"
                     strokeWidth="2"
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ duration: 0.6, delay: 0.8 }}
+                    fill="none"
+                    strokeDasharray="4 4"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 0.4 }}
+                    transition={{ duration: 1, delay: 0.8 }}
                   />
+
+                  {/* Dashboard to Small Chart */}
+                  <motion.path
+                    d="M 280 280 L 320 340"
+                    stroke="url(#lineGradient2)"
+                    strokeWidth="2"
+                    fill="none"
+                    strokeDasharray="4 4"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 0.4 }}
+                    transition={{ duration: 1, delay: 1.2 }}
+                  />
+
+                  {/* Gradients for lines */}
+                  <defs>
+                    <linearGradient id="lineGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#F97316" stopOpacity="0.2" />
+                      <stop offset="100%" stopColor="#F97316" stopOpacity="0.8" />
+                    </linearGradient>
+                    <linearGradient id="lineGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#F97316" stopOpacity="0.8" />
+                      <stop offset="100%" stopColor="#F97316" stopOpacity="0.2" />
+                    </linearGradient>
+                  </defs>
+
+                  {/* Animated dots traveling along lines */}
+                  <motion.circle
+                    r="3"
+                    fill="#F97316"
+                    initial={{ offsetDistance: '0%', opacity: 0 }}
+                    animate={{ offsetDistance: '100%', opacity: [0, 1, 1, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 2 }}
+                  >
+                    <animateMotion dur="3s" repeatCount="indefinite" begin="2s">
+                      <mpath href="#motionPath1" />
+                    </animateMotion>
+                  </motion.circle>
+
+                  <path id="motionPath1" d="M 140 120 Q 180 120 200 150" fill="none" />
                 </svg>
               </motion.div>
             )}
@@ -697,20 +892,64 @@ const DigitalExperience = () => {
           height: 100%;
         }
 
+        /* Ambient Particles */
+        .assembly-particles {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .assembly-particle {
+          position: absolute;
+          width: 6px;
+          height: 6px;
+          background: radial-gradient(circle, #F97316 0%, transparent 70%);
+          border-radius: 50%;
+        }
+
         .ui-card {
           position: absolute;
           background: white;
           border-radius: 20px;
-          box-shadow: 0 20px 40px -5px rgba(0,0,0,0.1);
-          border: 1px solid rgba(0,0,0,0.04);
-          overflow: hidden;
+          box-shadow:
+            0 20px 60px -15px rgba(0,0,0,0.15),
+            0 0 1px rgba(0,0,0,0.1);
+          border: 1px solid rgba(249, 115, 22, 0.08);
+          overflow: visible;
+          transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .ui-card:hover {
+          box-shadow:
+            0 25px 70px -15px rgba(249, 115, 22, 0.25),
+            0 0 0 1px rgba(249, 115, 22, 0.1);
+        }
+
+        /* Card Glow Effect */
+        .card-glow {
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(circle, rgba(249, 115, 22, 0.15), transparent 60%);
+          opacity: 0;
+          transition: opacity 0.4s;
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .ui-card:hover .card-glow {
+          opacity: 1;
         }
 
         /* Profile Card (Top Left - Staggered High) */
         .profile-card {
-           top: 10%; /* Moved UP from 20% to avoid overlap */
-           left: 0%;
-           width: 260px;
+           top: 8%;
+           left: -5%;
+           width: 240px;
            padding: 1.25rem;
            z-index: 4;
            display: flex;
@@ -740,26 +979,83 @@ const DigitalExperience = () => {
             background: #10b981;
             border: 2px solid white;
             border-radius: 50%;
+            z-index: 2;
         }
+
+        .status-ping {
+          position: absolute;
+          bottom: -2px; right: -2px;
+          width: 10px; height: 10px;
+          background: #10b981;
+          border-radius: 50%;
+          animation: ping-pulse 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+          z-index: 1;
+        }
+
+        @keyframes ping-pulse {
+          0% {
+            transform: scale(1);
+            opacity: 1;
+          }
+          75%, 100% {
+            transform: scale(2.5);
+            opacity: 0;
+          }
+        }
+
         .profile-name { font-weight: 600; font-size: 0.95rem; color: #1e293b; }
         .profile-role { font-size: 0.75rem; color: #64748b; }
 
         .profile-badge {
-            background: #F2F2F2;
+            background: linear-gradient(135deg, #F2F2F2, #FAFAFA);
             padding: 0.5rem;
             border-radius: 8px;
             font-size: 0.75rem;
             display: flex;
             align-items: center;
             gap: 6px;
-            color: #475569;
-            font-weight: 500;
+            color: #10b981;
+            font-weight: 600;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        /* Profile Stats */
+        .profile-stats {
+          display: flex;
+          gap: 1rem;
+          padding-top: 0.75rem;
+          border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .profile-stat {
+          flex: 1;
+          text-align: center;
+        }
+
+        .stat-num {
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: #0f172a;
+          line-height: 1;
+          margin-bottom: 0.25rem;
+          background: linear-gradient(135deg, #F97316, #EA580C);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .stat-lbl {
+          font-size: 0.7rem;
+          color: #64748b;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
         }
 
         /* Dashboard Main Content (Right Center - Staggered Low) */
         .dashboard-card {
-           top: 35%; /* Moved DOWN from 15% to clear Profile card */
-           right: 0%; 
+           top: 15%;
+           right: -5%;
            width: 340px;
            height: 240px;
            z-index: 2;
@@ -772,9 +1068,62 @@ const DigitalExperience = () => {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: linear-gradient(180deg, rgba(249, 115, 22, 0.02), transparent);
         }
-        .card-title { font-weight: 600; font-size: 0.9rem; color: #1e293b; }
-        .card-actions { display: flex; gap: 8px; color: #94a3b8; }
+
+        .card-title {
+          font-weight: 600;
+          font-size: 0.9rem;
+          color: #1e293b;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .header-icon {
+          color: #F97316;
+        }
+
+        .card-actions {
+          display: flex;
+          gap: 8px;
+          color: #94a3b8;
+        }
+
+        .action-btn {
+          position: relative;
+          width: 28px;
+          height: 28px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 8px;
+          background: rgba(249, 115, 22, 0.05);
+          cursor: pointer;
+          transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+          background: rgba(249, 115, 22, 0.15);
+          color: #F97316;
+        }
+
+        .notification-dot {
+          position: absolute;
+          top: 4px;
+          right: 4px;
+          width: 6px;
+          height: 6px;
+          background: #EF4444;
+          border-radius: 50%;
+          border: 1.5px solid white;
+          animation: pulse-notification 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-notification {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.2); opacity: 0.8; }
+        }
 
         .dashboard-content { padding: 1.5rem; }
         .stat-group { margin-bottom: 1rem; }
@@ -791,10 +1140,10 @@ const DigitalExperience = () => {
 
         /* Small Chart Card (Bottom Right) */
         .small-chart-card {
-            bottom: 5%;
-            right: 15%;
-            width: 180px;
-            padding: 1rem;
+            top: 62%;
+            right: 8%;
+            width: 220px;
+            padding: 1.25rem;
             z-index: 3;
             background: white;
         }
@@ -803,11 +1152,36 @@ const DigitalExperience = () => {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
         }
-        .small-chart-label { font-size: 0.75rem; color: #64748b; font-weight: 500; }
-        .small-chart-value { font-size: 1rem; font-weight: 700; color: #111827; }
-        .small-chart-svg { height: 40px; width: 100%; }
+
+        .small-chart-label {
+          font-size: 0.75rem;
+          color: #64748b;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        .small-chart-value {
+          font-size: 1.125rem;
+          font-weight: 700;
+          color: #111827;
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+        }
+
+        .trend-up {
+          font-size: 1rem;
+          color: #10b981;
+          font-weight: 700;
+        }
+
+        .small-chart-svg {
+          height: 50px;
+          width: 100%;
+        }
 
         .connection-lines {
            position: absolute;
@@ -822,7 +1196,7 @@ const DigitalExperience = () => {
           .hero-container {
              grid-template-columns: 1fr;
              text-align: center;
-             gap: 4rem;
+             gap: 3rem;
           }
           .hero-content {
              text-align: center;
@@ -839,38 +1213,126 @@ const DigitalExperience = () => {
           .cta-group {
              justify-content: center;
           }
-          .hero-engine { height: 400px; }
-          .code-window, .ui-assembly { scale: 0.8; }
+          .hero-engine {
+            height: 700px;
+            margin-top: 2rem;
+          }
+
+          /* Tablet view - adjust card positions */
+          .ui-assembly {
+            transform: scale(0.85);
+          }
+
+          .profile-card {
+            left: 5%;
+            top: 5%;
+          }
+
+          .dashboard-card {
+            right: 5%;
+            top: 20%;
+          }
+
+          .small-chart-card {
+            right: 15%;
+            bottom: 10%;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .hero-engine {
+            height: 900px;
+          }
+
+          /* Mobile view - stack cards vertically */
+          .ui-assembly {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 2rem 1rem;
+            transform: none;
+          }
+
+          .ui-card {
+            position: relative !important;
+            left: 0 !important;
+            right: 0 !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            max-width: 320px;
+            height: auto !important;
+          }
+
+          .profile-card {
+            order: 1;
+          }
+
+          .dashboard-card {
+            order: 2;
+          }
+
+          .small-chart-card {
+            order: 3;
+          }
+
+          .assembly-particles {
+            display: none;
+          }
+
+          .connection-lines {
+            display: none;
+          }
+
+          .code-window {
+            max-width: 90%;
+            transform: scale(0.9);
+          }
         }
 
         @media (max-width: 640px) {
           .hero-section {
             padding: 3rem 0;
           }
+
           .hero-title {
             font-size: 2.5rem;
           }
+
           .title-top {
             font-size: 1.25rem;
           }
+
           .cta-group {
             flex-direction: column;
             width: 100%;
             gap: 1rem;
           }
+
           .btn-primary,
           .btn-link {
             width: 100%;
             justify-content: center;
           }
+
           .tech-stack-mini {
             flex-direction: column;
             text-align: center;
             width: 100%;
             gap: 1rem;
           }
+
           .stack-icons {
             justify-content: center;
+          }
+
+          .hero-engine {
+            height: 850px;
+          }
+
+          .ui-card {
+            max-width: 280px;
           }
         }
       `}</style>
