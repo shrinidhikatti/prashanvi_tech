@@ -1,3 +1,10 @@
+import vishwaengImg from '../assets/vishwaeng.jpeg';
+import sagarImg from '../assets/sagar.jpeg';
+import preraneImg from '../assets/prerane.jpeg';
+import horoscopeImg from '../assets/horoscope.jpeg';
+import shaktiImg from '../assets/shakti.jpeg';
+import quickImg from '../assets/quick.jpeg';
+
 export function Portfolio() {
   const projects = [
     {
@@ -5,42 +12,54 @@ export function Portfolio() {
       category: 'Enterprise Solution',
       match: 'Enterspice',
       description: 'Comprehensive resource management system for large-scale operations.',
-      gradient: 'linear-gradient(135deg, #FF6B6B 0%, #EE5D6C 100%)'
+      gradient: 'linear-gradient(135deg, #FF6B6B 0%, #EE5D6C 100%)',
+      url: 'https://vishwaengineers.com/',
+      image: vishwaengImg
     },
     {
       title: 'Trade with Sagar',
       category: 'FinTech',
       match: 'Trading Tips',
       description: 'Real-time stock analysis and trading tips platform.',
-      gradient: 'linear-gradient(135deg, #4FACFE 0%, #00F2FE 100%)'
+      gradient: 'linear-gradient(135deg, #4FACFE 0%, #00F2FE 100%)',
+      url: 'https://tradewithsagar.com/',
+      image: sagarImg
     },
     {
       title: 'Prerane Software',
       category: 'EdTech',
       match: 'Education',
       description: 'Educational platform designed to enhance learning experiences.',
-      gradient: 'linear-gradient(135deg, #43E97B 0%, #38F9D7 100%)'
+      gradient: 'linear-gradient(135deg, #43E97B 0%, #38F9D7 100%)',
+      url: 'https://prerane.in/',
+      image: preraneImg
     },
     {
       title: 'Horoscopebook',
       category: 'Lifestyle',
       match: 'Astrology',
       description: 'Personalized horoscope and astrology insights application.',
-      gradient: 'linear-gradient(135deg, #FA709A 0%, #FEE140 100%)'
+      gradient: 'linear-gradient(135deg, #FA709A 0%, #FEE140 100%)',
+      url: 'https://astrovastushrivmjoshi.com/horoscopebook/',
+      image: horoscopeImg
     },
     {
       title: 'Shakti Kit',
       category: 'E-Commerce',
       match: 'Product',
       description: 'Direct-to-consumer product kit with seamless purchasing flow.',
-      gradient: 'linear-gradient(135deg, #667EEA 0%, #764BA2 100%)'
+      gradient: 'linear-gradient(135deg, #667EEA 0%, #764BA2 100%)',
+      url: 'https://astrovastushrivmjoshi.com/shaktikit/',
+      image: shaktiImg
     },
     {
       title: 'Quickvenue.in',
       category: 'Booking System',
       match: 'Hall Booking',
       description: 'Venue booking platform for events, weddings, and parties.',
-      gradient: 'linear-gradient(135deg, #F093FB 0%, #F5576C 100%)'
+      gradient: 'linear-gradient(135deg, #F093FB 0%, #F5576C 100%)',
+      url: 'https://www.quickvenue.in/',
+      image: quickImg
     },
   ];
 
@@ -57,8 +76,15 @@ export function Portfolio() {
 
         <div className="projects-grid">
           {projects.map((project, index) => (
-            <div key={index} className="project-card group">
-              <div className="project-preview" style={{ background: project.gradient }}>
+            <a
+              key={index}
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="project-card group"
+            >
+              <div className="project-preview">
+                <img src={project.image} alt={project.title} className="project-image" />
                 <div className="preview-overlay">
                   <span className="preview-match">{project.match}</span>
                 </div>
@@ -70,7 +96,7 @@ export function Portfolio() {
                 <p className="project-description">{project.description}</p>
                 <div className="arrow-icon">→</div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>
@@ -120,11 +146,17 @@ export function Portfolio() {
             position: relative;
             display: flex;
             flex-direction: column;
+            text-decoration: none;
+            cursor: pointer;
         }
 
         .project-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .project-card:active {
+            transform: translateY(-8px);
         }
 
         .project-preview {
@@ -134,18 +166,35 @@ export function Portfolio() {
             justify-content: center;
             position: relative;
             overflow: hidden;
+            background: #f0f0f0;
+        }
+
+        .project-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.4s ease;
+        }
+
+        .project-card:hover .project-image {
+            transform: scale(1.05);
         }
         
         .preview-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255,255,255,0.1);
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(5px);
             opacity: 0;
             transition: opacity 0.3s ease;
+            z-index: 1;
         }
         
         .project-card:hover .preview-overlay {
@@ -174,6 +223,7 @@ export function Portfolio() {
             height: 150px;
             background: rgba(255,255,255,0.2);
             border-radius: 50%;
+            z-index: 0;
         }
 
         .project-info {
