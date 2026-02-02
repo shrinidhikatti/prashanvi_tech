@@ -1141,7 +1141,6 @@ const DigitalExperience = () => {
         /* Small Chart Card (Bottom Right) */
         .small-chart-card {
             top: 62%;
-            right: 8%;
             width: 220px;
             padding: 1.25rem;
             z-index: 3;

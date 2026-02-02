@@ -85,10 +85,6 @@ export function Portfolio() {
             >
               <div className="project-preview">
                 <img src={project.image} alt={project.title} className="project-image" />
-                <div className="preview-overlay">
-                  <span className="preview-match">{project.match}</span>
-                </div>
-                <div className="card-decoration"></div>
               </div>
               <div className="project-info">
                 <span className="project-category">{project.category}</span>
