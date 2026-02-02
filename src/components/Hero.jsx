@@ -43,50 +43,104 @@ const DigitalExperience = () => {
 
   return (
     <section id="hero" className="hero-section">
+      {/* New Dynamic Background */}
+      <div className="hero-background">
+        <div className="bg-gradient-mesh"></div>
+        <div className="bg-particles">
+          {[...Array(25)].map((_, i) => (
+            <div key={i} className="particle" style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${15 + Math.random() * 10}s`
+            }}></div>
+          ))}
+        </div>
+      </div>
+
       <div className="container hero-container">
 
-        {/* Left Side: Minimal Apple-Style Content */}
+        {/* Left Side: Redesigned Content */}
         <motion.div
           className="hero-content"
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="badge-wrapper">
-            <div className="badge">
-              <span className="badge-dot"></span>
-              <span>v2.0 Now Available</span>
-            </div>
-          </div>
+          <motion.div
+            className="eyebrow-tag"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <Zap size={14} strokeWidth={2.5} />
+            <span>Powered by Innovation</span>
+            <div className="tag-glow"></div>
+          </motion.div>
 
           <h1 className="hero-title">
-            Digital Design <br />
-            <span className="text-highlight">& Strategy</span>
+            <motion.span
+              className="title-top"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              Where Code Meets
+            </motion.span>
+            <motion.span
+              className="title-main"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              Creativity
+            </motion.span>
           </h1>
 
-          <p className="hero-description">
-            We transform complex logic into
-            <span className="text-orange"> elegant user experiences</span>.
-            Prashanvi Tech bridges the gap between raw code and premium design.
-          </p>
+          <motion.p
+            className="hero-description"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+          >
+            Transforming complex algorithms into
+            <span className="text-orange"> intuitive experiences</span>.
+            We craft digital solutions that blend technical excellence with stunning design.
+          </motion.p>
 
-          <div className="cta-group">
+          <motion.div
+            className="cta-group"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1 }}
+          >
             <a href="#contact" className="btn btn-primary">
-              Start Project
+              <span>Start Your Project</span>
+              <div className="btn-bg-shine"></div>
+              <ArrowRight size={18} strokeWidth={2.5} />
             </a>
             <a href="#services" className="btn btn-link">
-              Explore Our Process <ArrowRight size={16} />
+              <span className="link-text">Explore Process</span>
+              <ArrowRight size={16} className="link-arrow" />
             </a>
-          </div>
+          </motion.div>
 
-          <div className="tech-stack-mini">
-            <span className="tech-label">Powered by</span>
-            <div className="tech-icons">
-              <Code2 size={16} />
-              <Cpu size={16} />
-              <Zap size={16} />
+          <motion.div
+            className="tech-stack-mini"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
+          >
+            <div className="stack-icons">
+              <div className="icon-wrapper"><Code2 size={18} /></div>
+              <div className="icon-wrapper"><Cpu size={18} /></div>
+              <div className="icon-wrapper"><Zap size={18} /></div>
             </div>
-          </div>
+            <div className="stack-text">
+              <span className="stack-label">Built with</span>
+              <span className="stack-desc">Cutting-edge technology</span>
+            </div>
+          </motion.div>
         </motion.div>
 
         {/* Right Side: Visual Engine (Code -> Design) */}
@@ -259,9 +313,72 @@ const DigitalExperience = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: #FFFFFF;
+          background: linear-gradient(160deg, #FAFAFA 0%, #FFFFFF 40%, #FFF7ED 100%);
           overflow: hidden;
           padding: 4rem 0;
+        }
+
+        /* New Background Styling */
+        .hero-background {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 0;
+          pointer-events: none;
+        }
+
+        .bg-gradient-mesh {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background:
+            radial-gradient(at 20% 30%, rgba(249, 115, 22, 0.08) 0px, transparent 50%),
+            radial-gradient(at 80% 70%, rgba(251, 146, 60, 0.06) 0px, transparent 50%),
+            radial-gradient(at 50% 50%, rgba(253, 186, 116, 0.04) 0px, transparent 50%);
+          animation: mesh-shift 20s ease-in-out infinite;
+        }
+
+        @keyframes mesh-shift {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        .bg-particles {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+        }
+
+        .particle {
+          position: absolute;
+          width: 4px;
+          height: 4px;
+          background: radial-gradient(circle, #F97316 0%, transparent 70%);
+          border-radius: 50%;
+          opacity: 0;
+          animation: float-particle 20s ease-in-out infinite;
+        }
+
+        @keyframes float-particle {
+          0%, 100% {
+            opacity: 0;
+            transform: translateY(0) translateX(0);
+          }
+          10% {
+            opacity: 0.4;
+          }
+          90% {
+            opacity: 0.2;
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(-100px) translateX(50px);
+          }
         }
 
         .hero-container {
@@ -275,47 +392,100 @@ const DigitalExperience = () => {
           padding: 0 2rem;
         }
 
-        /* ----- Left Side Styling ----- */
+        /* ----- Redesigned Left Side Content ----- */
         .hero-content {
           text-align: left;
         }
 
-        .badge-wrapper { margin-bottom: 2rem; }
-        .badge {
+        .eyebrow-tag {
+          position: relative;
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
-          padding: 0.5rem 1rem;
-          background: #F3F4F6;
-          border-radius: 100px;
-          color: #374151;
+          padding: 0.625rem 1.25rem;
+          margin-bottom: 2.5rem;
+          background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(251, 146, 60, 0.08));
+          border: 1.5px solid rgba(249, 115, 22, 0.2);
+          border-radius: 50px;
+          color: #EA580C;
           font-size: 0.875rem;
-          font-weight: 500;
+          font-weight: 700;
+          letter-spacing: 0.02em;
+          overflow: hidden;
         }
-        .badge-dot {
-          width: 6px;
-          height: 6px;
-          background: #F97316; /* Orange */
-          border-radius: 50%;
+
+        .eyebrow-tag svg {
+          position: relative;
+          z-index: 2;
+          color: #F97316;
+        }
+
+        .tag-glow {
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(circle, rgba(249, 115, 22, 0.15), transparent 70%);
+          animation: glow-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+          0%, 100% { opacity: 0.5; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.2); }
         }
 
         .hero-title {
-          font-size: clamp(3.5rem, 6vw, 5rem);
-          font-weight: 800;
-          line-height: 1.1;
-          color: #111827;
-          margin-bottom: 1.5rem;
-          letter-spacing: -0.03em;
+          font-size: clamp(3.5rem, 7vw, 6.5rem);
+          font-weight: 900;
+          line-height: 1.05;
+          color: #0F172A;
+          margin-bottom: 2rem;
+          letter-spacing: -0.04em;
+          display: flex;
+          flex-direction: column;
         }
-        
-        .text-highlight { color: #374151; }
-        .text-orange { color: #F97316; font-weight: 600; }
+
+        .title-top {
+          font-size: clamp(1.75rem, 3.5vw, 3rem);
+          font-weight: 600;
+          color: #475569;
+          letter-spacing: -0.02em;
+          margin-bottom: 0.25rem;
+        }
+
+        .title-main {
+          background: linear-gradient(135deg, #F97316 0%, #EA580C 50%, #DC2626 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          position: relative;
+          display: inline-block;
+        }
+
+        .title-main::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 8px;
+          background: linear-gradient(90deg, #F97316, transparent);
+          opacity: 0.2;
+          border-radius: 4px;
+        }
+
+        .text-orange {
+          color: #F97316;
+          font-weight: 700;
+          position: relative;
+        }
 
         .hero-description {
           font-size: 1.25rem;
-          line-height: 1.6;
-          color: #6B7280;
-          max-width: 500px;
+          line-height: 1.75;
+          color: #475569;
+          max-width: 540px;
           margin-bottom: 3rem;
           font-weight: 400;
         }
@@ -323,38 +493,157 @@ const DigitalExperience = () => {
         .cta-group {
           display: flex;
           align-items: center;
-          gap: 2rem;
+          gap: 1.5rem;
           margin-bottom: 4rem;
+          flex-wrap: wrap;
         }
 
         .btn-primary {
-          background: #111827;
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.75rem;
+          background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
           color: white;
-          padding: 1rem 2rem;
-          border-radius: 12px;
-          font-weight: 600;
-          transition: transform 0.2s;
+          padding: 1.125rem 2.25rem;
+          border-radius: 14px;
+          font-weight: 700;
+          font-size: 1rem;
+          text-decoration: none;
+          overflow: hidden;
+          transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+          box-shadow:
+            0 4px 14px rgba(15, 23, 42, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
-        .btn-primary:hover { transform: translateY(-2px); }
+
+        .btn-primary:hover {
+          transform: translateY(-3px);
+          box-shadow:
+            0 8px 24px rgba(15, 23, 42, 0.25),
+            0 0 0 3px rgba(249, 115, 22, 0.1);
+        }
+
+        .btn-primary svg {
+          transition: transform 0.3s;
+        }
+
+        .btn-primary:hover svg {
+          transform: translateX(4px);
+        }
+
+        .btn-bg-shine {
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.3), transparent);
+          transition: left 0.6s;
+        }
+
+        .btn-primary:hover .btn-bg-shine {
+          left: 100%;
+        }
 
         .btn-link {
-          display: flex;
+          display: inline-flex;
           align-items: center;
           gap: 0.5rem;
-          color: #111827;
-          font-weight: 600;
+          color: #0F172A;
+          font-weight: 700;
+          font-size: 1rem;
           text-decoration: none;
+          padding: 1.125rem 1.5rem;
+          border-radius: 14px;
+          transition: all 0.3s;
+          position: relative;
         }
-        .btn-link:hover { text-decoration: underline; }
+
+        .btn-link::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 14px;
+          padding: 2px;
+          background: linear-gradient(135deg, rgba(249, 115, 22, 0.3), transparent);
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          opacity: 0;
+          transition: opacity 0.3s;
+        }
+
+        .btn-link:hover::before {
+          opacity: 1;
+        }
+
+        .btn-link:hover {
+          color: #F97316;
+          background: rgba(249, 115, 22, 0.05);
+        }
+
+        .link-arrow {
+          transition: transform 0.3s;
+        }
+
+        .btn-link:hover .link-arrow {
+          transform: translateX(4px);
+        }
 
         .tech-stack-mini {
           display: flex;
           align-items: center;
-          gap: 1rem;
-          opacity: 0.6;
+          gap: 1.5rem;
+          padding: 1.5rem;
+          background: rgba(249, 115, 22, 0.04);
+          border: 1px solid rgba(249, 115, 22, 0.1);
+          border-radius: 16px;
+          max-width: fit-content;
         }
-        .tech-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; }
-        .tech-icons { display: flex; gap: 0.5rem; }
+
+        .stack-icons {
+          display: flex;
+          gap: 0.75rem;
+        }
+
+        .icon-wrapper {
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: white;
+          border-radius: 10px;
+          color: #F97316;
+          box-shadow: 0 2px 8px rgba(249, 115, 22, 0.1);
+          transition: all 0.3s;
+        }
+
+        .icon-wrapper:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+        }
+
+        .stack-text {
+          display: flex;
+          flex-direction: column;
+          gap: 0.125rem;
+        }
+
+        .stack-label {
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: #64748B;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        .stack-desc {
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: #0F172A;
+        }
 
 
         /* ----- Right Side (Animation Engine) ----- */
@@ -533,6 +822,7 @@ const DigitalExperience = () => {
           .hero-container {
              grid-template-columns: 1fr;
              text-align: center;
+             gap: 4rem;
           }
           .hero-content {
              text-align: center;
@@ -540,8 +830,48 @@ const DigitalExperience = () => {
              flex-direction: column;
              align-items: center;
           }
+          .hero-title {
+             align-items: center;
+          }
+          .hero-description {
+             text-align: center;
+          }
+          .cta-group {
+             justify-content: center;
+          }
           .hero-engine { height: 400px; }
           .code-window, .ui-assembly { scale: 0.8; }
+        }
+
+        @media (max-width: 640px) {
+          .hero-section {
+            padding: 3rem 0;
+          }
+          .hero-title {
+            font-size: 2.5rem;
+          }
+          .title-top {
+            font-size: 1.25rem;
+          }
+          .cta-group {
+            flex-direction: column;
+            width: 100%;
+            gap: 1rem;
+          }
+          .btn-primary,
+          .btn-link {
+            width: 100%;
+            justify-content: center;
+          }
+          .tech-stack-mini {
+            flex-direction: column;
+            text-align: center;
+            width: 100%;
+            gap: 1rem;
+          }
+          .stack-icons {
+            justify-content: center;
+          }
         }
       `}</style>
     </section>
