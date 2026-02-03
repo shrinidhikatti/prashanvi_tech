@@ -476,7 +476,7 @@ const DigitalExperience = () => {
                       <stop offset="0%" stopColor="#F97316" stopOpacity="0.8" />
                       <stop offset="100%" stopColor="#F97316" stopOpacity="0.2" />
                     </linearGradient>
-                  </defs>
+                  </defs> 
 
                   {/* Animated dots traveling along lines */}
                   <motion.circle
