@@ -3,7 +3,7 @@ import sagarImg from '../assets/sagar.jpeg';
 import preraneImg from '../assets/prerane.jpeg';
 import horoscopeImg from '../assets/horoscope.jpeg';
 import shaktiImg from '../assets/shakti.jpeg';
-import quickImg from '../assets/quick.jpeg';
+import quickImg from '../assets/quick.png';
 
 export function Portfolio() {
   const projects = [
