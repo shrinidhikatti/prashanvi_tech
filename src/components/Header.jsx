@@ -51,14 +51,14 @@ export function Header() {
                 strokeLinejoin="round"
                 className="letter-p"
               />
-
               {/* Circuit nodes */}
-              <circle cx="20" cy="18" r="2" fill="white" className="node node-1" />
+              {/* <circle cx="20" cy="18" r="2" fill="white" className="node node-1" />
               <circle cx="26" cy="18" r="2" fill="white" className="node node-2" />
               <circle cx="29.5" cy="21.5" r="2" fill="white" className="node node-3" />
               <circle cx="26" cy="25" r="2" fill="white" className="node node-4" />
               <circle cx="20" cy="25" r="2" fill="#FF5722" className="node node-5" />
-              <circle cx="20" cy="32" r="2" fill="#FF5722" className="node node-6" />
+              <circle cx="20" cy="32" r="2" fill="#FF5722" className="node node-6" /> */}
+
 
               {/* Connection lines (circuit traces) */}
               <path
