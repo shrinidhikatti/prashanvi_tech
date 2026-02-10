@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import vishwaengImg from '../assets/vishwaeng.jpeg';
 import sagarImg from '../assets/sagar.jpeg';
-import preraneImg from '../assets/prerane.jpeg';
+import preraneImg from '../assets/prerane2.jpeg';
 import horoscopeImg from '../assets/horoscope.jpeg';
 import shaktiImg from '../assets/shakti.jpeg';
 import quickImg from '../assets/quick.png';
@@ -57,13 +57,12 @@ export function Portfolio() {
       url: 'https://prerane.in/',
       image: preraneImg,
       techStack: {
-        frontend: ['React', 'Bootstrap', 'Video.js'],
-        backend: ['Node.js', 'Express', 'MongoDB'],
-        language: ['JavaScript'],
-        frameworks: ['React Router', 'Formik'],
-        stateManagement: ['Redux'],
-        paymentGateways: ['Razorpay'],
-        other: ['JWT Auth', 'Cloudinary', 'Email Integration']
+        frontend: ['Tailwind CSS', 'Font Awesome 6.0', 'Django Templates', 'Vanilla JavaScript'],
+        backend: ['Django 4.2+', 'Python 3.x', 'PostgreSQL 14 (Google Cloud SQL)', 'SQLite3'],
+        language: ['Python'],
+        frameworks: ['Django', 'WhiteNoise', 'openpyxl', 'pandas'],
+        stateManagement: ['Django Session Management'],
+        other: ['Google Cloud Platform', 'Excel Export', 'Role-Based Access Control', 'Multi-Role System']
       }
     },
     {
@@ -196,17 +195,32 @@ export function Portfolio() {
                     Tech Stack
                   </button>
 
-                  <a
-                    href={project.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-visit"
-                  >
-                    Visit Site
-                    <svg className="btn-icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </a>
+                  {project.url === '#' ? (
+                    <button
+                      className="btn-visit"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        alert('🚧 Project Under Development\n\nThis project is currently in testing phase and deployment is pending. Stay tuned for the live launch!');
+                      }}
+                    >
+                      Visit Site
+                      <svg className="btn-icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </button>
+                  ) : (
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-visit"
+                    >
+                      Visit Site
+                      <svg className="btn-icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
