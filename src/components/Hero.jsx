@@ -1,4 +1,4 @@
-import { ArrowRight, BarChart3, Bell, CheckCircle, Code2, Cpu, Globe, Home, LayoutDashboard, Layers, PieChart, Search, Settings, User, Zap } from 'lucide-react';
+import { ArrowRight, BarChart3, Bell, CheckCircle, Code2, TerminalSquare, GitBranch, Globe, Home, LayoutDashboard, Layers, PieChart, Search, Settings, User, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
@@ -132,13 +132,13 @@ const DigitalExperience = () => {
             transition={{ duration: 0.8, delay: 1.2 }}
           >
             <div className="stack-icons">
-              <div className="icon-wrapper"><Code2 size={18} /></div>
-              <div className="icon-wrapper"><Cpu size={18} /></div>
-              <div className="icon-wrapper"><Zap size={18} /></div>
+              <div className="icon-wrapper"><Code2 size={18} strokeWidth={2.2} /></div>
+              <div className="icon-wrapper"><TerminalSquare size={18} strokeWidth={2.2} /></div>
+              <div className="icon-wrapper"><GitBranch size={18} strokeWidth={2.2} /></div>
             </div>
             <div className="stack-text">
               <span className="stack-label">Built with</span>
-              <span className="stack-desc">Cutting-edge technology</span>
+              <span className="stack-desc">Modern web stack</span>
             </div>
           </motion.div>
         </motion.div>
