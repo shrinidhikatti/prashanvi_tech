@@ -6,7 +6,7 @@ const products = [
   {
     name: 'RestroSync',
     tagline: 'Restaurant Management SaaS',
-    description: 'A Petpooja-style multi-tenant POS built for modern restaurants — from street-side dhabas to fine dining chains.',
+    description: 'A cloud-native multi-tenant POS and restaurant management platform — built for every format, from street-side dhabas to multi-outlet fine dining chains.',
     image: restrosyncImg,
     accent: '#F97316',
     accentLight: 'rgba(249,115,22,0.12)',

@@ -2214,3 +2214,847 @@ Based on our work together, here's the complete tech stack for your Learn It Up 
   - GET /api/course-materials - Fetch course materials
 
   This is a modern, production-ready JAMstack-style web application with serverless architecture! 🚀
+
+  project no 10 : # RestroSync — Technical Stack & Architecture
+
+> Petpooja-style Restaurant Management SaaS — Multi-tenant, Multi-mode, Production-ready
+
+---
+
+## 🏗️ Architecture Overview
+
+Full-stack multi-tenant SaaS platform with offline-first POS, real-time kitchen display, and mobile captain app.
+
+```
+┌─────────────────────────────────────────────────────┐
+│                  React Dashboard (Web)               │
+├─────────────────────────────────────────────────────┤
+│            Flutter Captain/Biller App (Mobile)       │
+├─────────────────────────────────────────────────────┤
+│         NestJS REST API + Socket.io Gateway          │
+├──────────────┬──────────────────────────────────────┤
+│  PostgreSQL  │  Redis (cache + sessions + pub/sub)   │
+└──────────────┴──────────────────────────────────────┘
+```
+
+---
+
+## 🎨 Frontend — React Dashboard
+
+### Core Framework
+- **React 18** — Functional components, hooks
+- **Vite 7** — Lightning-fast build tool (replaces CRA/Webpack)
+- **TypeScript** — Strict type safety throughout
+- **React Router DOM v6** — Client-side routing, lazy loading
+
+### UI & Styling
+- **Tailwind CSS** — Utility-first styling
+- **CSS Variables** — Theme tokens (dark navy sidebar, amber accent)
+- **Syne + DM Sans** — Custom typography via Google Fonts
+- **Lucide React** — Icon library
+
+### State Management
+- **Zustand** — Lightweight global state (auth store, UI store)
+- **React Query / fetch** — Server state & API calls
+
+### Real-time
+- **Socket.io Client** — Live KOT updates, kitchen display, order status
+
+### PWA
+- **Vite PWA Plugin** — Service worker, offline caching, install prompt
+- **Web Push** — Push notification support
+
+### Key Pages & Modules
+| Module | Description |
+|---|---|
+| Dashboard | Sales overview, live metrics |
+| Menu | Categories, items, combos, modifiers |
+| Orders | Active orders, KOT management |
+| Tables | Floor plan, table status |
+| Kitchen Display (KDS) | Real-time order queue by station |
+| Billing | GST-ready bills, split/merge, refunds |
+| Inventory | Stock levels, low-stock alerts |
+| CRM | Customers, loyalty points, credit/khata |
+| Reports | Sales, tax, hourly, audit log, fraud |
+| Multi-Outlet | Branch comparison, menu push |
+| Staff | Attendance, roles, permissions |
+| Settings | Tax, discounts, charges, integrations |
+| Super Admin | Platform management (violet theme) |
+
+---
+
+## ⚙️ Backend — NestJS API
+
+### Core Framework
+- **NestJS** — Modular Node.js framework (decorators, DI, guards)
+- **TypeScript** — Full type safety
+- **Node.js 20** — LTS runtime
+
+### API Design
+- **REST API** — `/api/v1/` prefix, camelCase JSON
+- **Socket.io** — WebSocket gateway with rooms by `branchId` + kitchen station
+- **Swagger/OpenAPI** — Auto-generated API docs
+
+### Authentication & Security
+- **Passport.js + JWT** — Access token (15min) + Refresh token (7 days)
+- **bcrypt** — Password hashing (10 rounds)
+- **PIN Login** — 4-digit PIN for POS devices
+- **Role-based Guards** — OWNER, MANAGER, CAPTAIN, BILLER, KITCHEN, SUPER_ADMIN
+- **Permission System** — 23 granular permissions per restaurant
+- **Rate Limiting** — 500 req/15min on auth endpoints
+- **Request Logger** — JSON logs: method, url, status, duration
+
+### Database ORM
+- **Prisma 5** — Type-safe ORM, migrations, Prisma Studio
+- **Binary Target** — `linux-musl-openssl-3.0.x` for Alpine Docker
+
+### Caching & Sessions
+- **Redis 7** — JWT blacklist, rate limiting, pub/sub for Socket.io scaling
+
+### Scheduled Jobs (`@nestjs/schedule`)
+- **Nightly Archival** — 02:00 UTC: DailyReport gap-fill, audit log stats
+- **Demo Reset** — 21:30 UTC (3 AM IST): Wipe + re-seed all demo restaurants
+
+### Key Backend Modules
+| Module | Responsibilities |
+|---|---|
+| Auth | JWT, PIN login, forgot/reset password |
+| Restaurant | Multi-tenant setup, plan limits |
+| Branch | Multi-outlet management |
+| Menu | Categories, items, combos, versioning |
+| Order | KOT creation, order lifecycle, token numbers |
+| Bill | GST billing, bill numbers (INV/FY/seq) |
+| Payment | Cash, UPI, Card, split payments |
+| KDS | Kitchen display, station routing |
+| Inventory | Stock tracking, alerts |
+| CRM | Customers, loyalty, credit accounts |
+| Reports | Sales, tax, hourly, audit |
+| Multi-Outlet | Consolidated dashboard, stock transfers |
+| Integrations | Razorpay, UPI QR, Zomato/Swiggy, Tally XML |
+| Day Close | Cash reconciliation, carry-forward |
+| Number Ranges | Offline bill/KOT number pre-allocation |
+| Demo | Seed/wipe demo data per restaurant |
+| Jobs | Nightly archival + demo reset crons |
+| Health | `/health`, `/health/socket` endpoints |
+
+---
+
+## 🗄️ Database — PostgreSQL
+
+### Database System
+- **PostgreSQL 16** — Primary database (Docker volume on Hetzner)
+- **30+ tables** — Full multi-tenant schema
+
+### Schema Highlights
+| Table | Key Fields |
+|---|---|
+| `Restaurant` | operatingMode, planId, gstin, loyaltyPointsPerHundred |
+| `Branch` | restaurantId, isActive |
+| `User` | role (7 types), pin, restaurantId, branchId |
+| `MenuItem` | price, foodType, taxPercent, isAvailable |
+| `Order` | branchId, status (8 states), businessDate, tokenNumber |
+| `Bill` | billNumber (INV/FY/seq), grandTotal, paymentStatus |
+| `Payment` | method (CASH/UPI/CARD/WALLET), splits |
+| `KOT` | kitchenStation, kotNumber, items |
+| `InventoryItem` | currentStock, reorderLevel, unit |
+| `Customer` | phone (unique per restaurant), loyaltyPoints, creditBalance |
+| `AuditLog` | 7-year GST retention, all mutations tracked |
+
+### Performance
+- **DB Indexes** — `orders(branchId+status)`, `orders(branchId+businessDate)`, `bills(branchId+status)`, `loyalty_points(restaurantId+customerId)`
+- **Nightly DailyReport** — Pre-computed aggregates for fast reporting
+- **Archival Strategy** — Scaffold for 90-day order archival
+
+---
+
+## 📱 Mobile — Flutter Captain/Biller App
+
+### Framework
+- **Flutter 3.27** — Cross-platform (Android APK builds clean)
+- **Dart 3.6.1** — Null-safe, modern Dart
+
+### Architecture
+- **Clean Architecture** — domain / data / presentation layers
+- **Riverpod** — Reactive state management
+- **go_router** — Declarative navigation
+
+### Captain App Features
+- Table map, order taking, KOT push
+- Menu browsing with veg/non-veg indicators
+- Real-time order status via Socket.io
+
+### Biller/POS App Features
+- PIN + email login
+- Barcode scanning (`mobile_scanner`)
+- UPI QR generation (`qr_flutter`)
+- Split payments
+- Offline order queue (SQLite WAL)
+- 5-second undo on actions
+- 3-retry print queue
+- Day-end close wizard
+- Background sync every 15 min (`WorkManager`)
+- Clock drift detection (blocks billing if >5min drift)
+
+### Offline-First
+- **sqflite** — Local SQLite database (WAL mode)
+- **Sync Queue** — Draft orders, number range pre-allocation
+- **Background Sync** — `workmanager` + foreground notification
+
+---
+
+## 🔌 Integrations
+
+| Integration | Technology |
+|---|---|
+| Razorpay | REST API, HMAC-SHA256 webhook verification |
+| UPI QR | `upi://pay?...` URL → frontend renders QR |
+| Zomato / Swiggy | Webhook ingestion, idempotent order creation |
+| SMS / WhatsApp | MSG91 / Twilio API |
+| Tally XML Export | TALLYMESSAGE format, CGST/SGST ledger entries |
+| Google Maps | Delivery tracking (MrCakeBakers pattern) |
+
+---
+
+## 🚀 Infrastructure & DevOps
+
+### Hosting
+- **Hetzner VPS** — Ubuntu 24.04, 74GB disk, 16% memory usage
+- **Domain** — `restrosync.prashanvitech.com`
+- **SSL** — Let's Encrypt via Certbot (auto-renews)
+
+### Containerization
+- **Docker 29** — All services containerized
+- **Docker Compose** — Multi-service orchestration
+- **`docker-compose.prod.yml`** — Production stack
+- **`docker-compose.server.yml`** — Hetzner port override (3001:80)
+
+### Services Running
+| Container | Image | Port |
+|---|---|---|
+| `restrosync-backend` | Custom (NestJS) | 3000 (internal) |
+| `restrosync-frontend` | Custom (nginx+React) | 3001→80 |
+| `restrosync-postgres` | postgres:16-alpine | 5432 (internal) |
+| `restrosync-redis` | redis:7-alpine | 6379 (internal) |
+| `restrosync-backup` | postgres:16-alpine | nightly pg_dump |
+
+### Nginx (Host)
+- Reverse proxy: `restrosync.prashanvitech.com` → `localhost:3001`
+- Frontend container nginx: serves React SPA + proxies `/api/` and `/socket.io/` to backend
+
+### CI/CD
+- **GitHub Actions** — `.github/workflows/ci.yml`
+  - Backend: TypeScript build + Jest tests
+  - Frontend: Vite build
+  - Deploy on `main` push
+- **rsync Deploy Script** — `./deploy.sh [frontend|backend|all]`
+  - Syncs only changed files to Hetzner
+  - Triggers Docker rebuild of target service
+
+### Backups
+- **Nightly pg_dump** — Compressed `.sql.gz` to `/backups/`
+- **30-day retention** — Auto-deletes old backups
+
+---
+
+## 🧪 Testing
+
+- **Jest + ts-jest** — Unit tests for backend services
+- **Supertest** — HTTP integration tests
+- **Playwright** — E2E tests (`e2e/` directory)
+- **Mock Strategy** — `const mockPrisma: any = {}` (avoids circular TS errors)
+
+---
+
+## 🔐 Security
+
+- JWT access (15min) + refresh (7d) token rotation
+- PIN login for POS (no password exposure on floor)
+- Rate limiting on auth (500 req/15min)
+- RBAC with 23 granular permissions
+- Secrets in `.env` (never committed, excluded from rsync)
+- DPDPA compliance — customer data anonymization (`isAnonymized`)
+- Audit log — 7-year GST retention
+
+---
+
+## 🌐 Operating Modes
+
+| Mode | Description | Features |
+|---|---|---|
+| **COUNTER** | Quick service / takeaway | Token display, cashier billing, no tables |
+| **TABLE_SIMPLE** | Casual dine-in | Tables, captain ordering, basic KOT |
+| **FULL_SERVICE** | Fine dining | Full KDS, multiple stations, manager controls |
+
+---
+
+## 📊 Tech Stack Summary
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Vite 7, TypeScript, Tailwind CSS, Zustand |
+| Mobile | Flutter 3.27, Riverpod, go_router, sqflite |
+| Backend | NestJS, TypeScript, Passport JWT, Socket.io |
+| Database | PostgreSQL 16, Prisma 5, Redis 7 |
+| Real-time | Socket.io (rooms by branch + kitchen station) |
+| Auth | JWT + PIN login, RBAC, 23 permissions |
+| Infra | Hetzner VPS, Docker, nginx, Certbot SSL |
+| CI/CD | GitHub Actions + rsync deploy script |
+| Integrations | Razorpay, UPI QR, Zomato/Swiggy, Tally XML |
+| Testing | Jest, ts-jest, Playwright |
+| Monitoring | NestJS Logger, request logger middleware, `/health` endpoint |
+
+project no 11 : # ShopBill — Technical Stack & Architecture
+
+> Offline-first desktop billing software for Indian retail shops — GST-ready, multi-language, thermal printing, cloud sync.
+
+---
+
+## 🏗️ Architecture Overview
+
+Monorepo with npm workspaces. Electron desktop app with a shared React UI, a Django cloud backend for sync, and a PWA variant for browser access.
+
+```
+┌─────────────────────────────────────────────────────────┐
+│            React 18 UI (packages/ui)                    │
+│    Vite + Tailwind CSS + Zustand + i18next              │
+├─────────────────────────────────────────────────────────┤
+│           Electron Shell (packages/electron-app)        │
+│       better-sqlite3 (WAL) + IPC bridge + preload      │
+├──────────────────────────┬──────────────────────────────┤
+│   Core Logic (packages/core)   │  PWA (packages/pwa-app) │
+│  GST calc, invoice, receipt    │  Same UI, browser-only  │
+├──────────────────────────┴──────────────────────────────┤
+│         Django REST Backend (packages/backend)           │
+│         JWT auth + sync push/pull + web dashboard        │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🗂️ Monorepo Structure
+
+| Package | Description |
+|---|---|
+| `packages/core` | Shared TypeScript logic — GST calculator, invoice types, receipt builder |
+| `packages/ui` | React 18 UI — all screens, hooks, components |
+| `packages/electron-app` | Electron shell — SQLite DB, IPC handlers, printing, sync |
+| `packages/pwa-app` | Vite PWA build of the same UI for browser access |
+| `packages/backend` | Django REST API for cloud sync and owner web dashboard |
+
+---
+
+## 🎨 Frontend — React UI (`packages/ui`)
+
+### Core Framework
+- **React 18** — Functional components, hooks
+- **Vite 6** — Build tool, dev server (port 5174)
+- **TypeScript 5.6** — Strict type safety
+- **React Router DOM v6** — Client-side routing
+
+### UI & Styling
+- **Tailwind CSS 3** — Utility-first styling
+- **CSS Variables** — Theme tokens (`--surface`, `--ink`, `--primary`, `--accent`)
+- **DM Sans + DM Mono** — Typography via Google Fonts
+- **Lucide React** — Icon library
+- **Dark mode** — `html.dark {}` CSS vars, `useTheme` hook, sidebar toggle
+
+### State Management
+- **Zustand 5** — Global state (cart, auth, customers, sounds)
+- **Custom hooks** — `useCart`, `useCustomers`, `useSoundEffects`, `useTheme`
+
+### Internationalization
+- **i18next 23 + react-i18next 15** — 6 languages supported
+- **Languages** — English, Hindi (hi), Kannada (kn), Marathi (mr), Telugu (te), Tamil (ta)
+- **Language selector** in ShopSettings; persisted to localStorage
+
+### Barcode & QR
+- **html5-qrcode 2.3** — Camera barcode scanner in ProductSearch
+- **jsbarcode 3.12** — Barcode rendering
+- **qrcode 1.5** — UPI QR generation on printed receipts
+
+### Excel
+- **xlsx 0.18** — Export products/invoices, import products, download template
+
+### Notifications
+- **react-hot-toast 2.4** — Toast notifications
+
+### Key Screens & Modules
+| Module | Description |
+|---|---|
+| Billing | Product search, cart (Zustand), GST calculator, quick bill |
+| Favorites Grid | Star-pinned products, stored in localStorage |
+| Hold Bill | Suspend and resume active carts (held_bills table) |
+| Payment Modal | Cash/UPI/Card, credit (khata), change calculation |
+| Invoice List / Detail | Search, filter, reprint, cancel, return |
+| Customers & Ledger | CRUD, credit balance, khata payments |
+| Products & Variants | CRUD, category manager, stock adjustment, VariantManager |
+| Suppliers & Ledger | CRUD, purchase orders, payment recording |
+| Dashboard | Live sales, top products, daily stats |
+| Advanced Reports | Date-range, product-wise, GST, stock, customer outstanding, profit margins |
+| GSTR-1 | B2B, B2C, HSN sub-tabs + 4-sheet Excel export |
+| Expenses | Daily expense tracking, shown in net profit |
+| Day-End Closing | Sales/expense/profit summary + localStorage close flag |
+| Excel Tools | Export products/invoices, import products, template download |
+| Backup & Restore | Manual backup, auto-backup at 20:00, restore from file |
+| Archive Manager | Archive old invoices to `invoices_archive` by year cutoff |
+| PIN Login | 4-digit PIN, role-based access (`useAuth` Zustand store) |
+| User Management | Add/edit staff users with roles |
+| Audit Log Viewer | Searchable log of all mutations |
+| Printer Config | Paper width, UPI ID, auto-print toggle |
+| Cloud Sync | Login/register, push/pull status, last sync time |
+| License | Key activation (SHOPBILL-PRO-XXXX format, 1-year expiry) |
+| Dark Mode | Toggle in sidebar footer |
+
+---
+
+## ⚙️ Electron Shell (`packages/electron-app`)
+
+### Core
+- **Electron 33** — Desktop shell, `BrowserWindow`, IPC
+- **TypeScript 5.6** — Compiled to CommonJS for Electron compatibility
+- **Context isolation + preload** — Secure IPC bridge (`preload.ts` exposes `window.electronAPI`)
+- **Single instance lock** — Prevents duplicate app windows
+
+### Database
+- **better-sqlite3 11** — Synchronous SQLite, WAL mode
+- **@electron/rebuild** — Recompiles native modules after `npm install`
+- **DB location** — `~/Library/Application Support/ShopBill/data/shopbill.db` (Mac)
+
+### Migrations (10 total)
+| Migration | Contents |
+|---|---|
+| 001_initial | shops, categories, products, invoices, invoice_items |
+| 002_customers_khata_variants | customers, khata_payments, product_variants, app_settings, `is_credit` on invoices |
+| 003_returns_users_audit | return_items, users, audit_log |
+| 004_held_bills | held_bills |
+| 005_expenses | expenses |
+| 006_igst | IGST columns on invoice_items |
+| 007_expenses_sync | sync fields on expenses |
+| 008_suppliers | suppliers, purchase_orders, purchase_items |
+| 009_supplier_payments | supplier_payments |
+| 010_invoice_archive | invoices_archive, invoice_items_archive |
+
+### Printing
+- **node-thermal-printer 4.6** — ESC/POS commands for thermal printers
+- **Browser fallback** — `window.print()` via BrowserWindow for non-thermal setups
+- **UPI QR on receipt** — `qrcode` generates data URL; embedded in browser print or sent as ESC/POS QR command
+- **Auto-print** — Configurable, triggers after invoice save
+
+### HTTP API
+- **Local HTTP server** (port 5175) — Browser dev access to IPC data
+
+### Packaging
+- **electron-builder 25** — Creates installers
+- **NSIS** — Windows installer (one-click off, custom install dir, Start Menu + Desktop shortcuts)
+- **DMG** — Mac (x64 + arm64 universal builds)
+- **AppImage** — Linux
+
+### IPC Handler Categories
+`products`, `categories`, `invoices`, `customers`, `khata`, `returns`, `users`, `audit`, `backup`, `sync`, `report`, `db`, `printer`, `license`, `suppliers`
+
+---
+
+## 🧩 Core Package (`packages/core`)
+
+- **TypeScript 5** → compiled to **CommonJS** (required by Electron)
+- GST rate calculator (CGST/SGST/IGST split)
+- Invoice type definitions shared across UI + Electron
+- Receipt template builder — outputs structured line objects (`text`, `separator`, `qr`)
+- Text receipt renderer — plain text for thermal print
+
+---
+
+## 🌐 Backend — Django REST API (`packages/backend`)
+
+### Core Framework
+- **Django 5.1** — Python web framework
+- **Django REST Framework 3.15** — Serializers, ViewSets, routers
+- **Gunicorn 23** — WSGI production server
+- **Whitenoise 6.8** — Static file serving
+
+### Authentication
+- **djangorestframework-simplejwt 5.3** — JWT access + refresh tokens
+- **django-cors-headers 4.4** — CORS for Electron + browser clients
+
+### Sync Engine
+- **POST `/api/sync/push/`** — Append-only for financial records (invoices, payments); upsert for non-financial (products, customers)
+- **GET `/api/sync/pull/?since=`** — Delta pull by timestamp
+- **Device registration** — Each Electron install registers a device ID
+
+### Reports API
+- `GET /api/dashboard/` — Today's stats
+- `GET /api/reports/?from=&to=` — Date-range sales data
+
+### Owner Web Dashboard
+- Single-file SPA served at `/` and `/owner/`
+- Mobile-first, works on phone browser
+- Login, today stats, date-range reports, invoice list, customer outstanding
+
+### Database
+- **PostgreSQL** (via psycopg2-binary 2.9) — Production
+- **SQLite** — Development default
+
+### Extras
+- **openpyxl 3.1** — Excel report generation on the backend
+- **python-decouple 3.8** — `.env` config management
+- **Pillow 11** — Image handling
+
+---
+
+## 🔐 Security & Auth
+
+- PIN login (4-digit) for POS devices — no password on the billing floor
+- JWT access + refresh tokens for cloud sync
+- Role-based access — roles enforced in IPC handlers and UI guards
+- Context isolation in Electron — renderer has no Node.js access
+- Secrets in `.env` — never committed
+
+---
+
+## 🖨️ Printing
+
+| Mode | Technology |
+|---|---|
+| Thermal (USB/Network) | `node-thermal-printer` — ESC/POS commands |
+| Browser print | `BrowserWindow.webContents.print()` fallback |
+| UPI QR on receipt | `qrcode` npm → data URL embedded in print |
+| Reprint | Available from InvoiceDetail screen |
+| Test page | Printer test from PrinterConfig settings |
+
+---
+
+## 📊 Reporting
+
+| Report | Description |
+|---|---|
+| Daily Sales | Revenue, GST collected, net profit after expenses |
+| Advanced Reports | Date range, product-wise, stock levels, customer outstanding |
+| GSTR-1 | B2B/B2C/HSN breakdown, 4-sheet Excel export |
+| Profit Report | Per-product margin %, gross/net profit, margin bar |
+| Day-End Close | Cash reconciliation summary |
+| Audit Log | All mutations with user + timestamp |
+
+---
+
+## 🚀 Infrastructure & DevOps
+
+### Hosting
+- **Hetzner VPS** — Ubuntu, production server
+- **Domain** — `billing.prashanvitech.com`
+- **nginx** — Reverse proxy, SSL termination
+- **Let's Encrypt / Certbot** — SSL (auto-renews)
+
+### PWA Deploy
+- Built at `packages/pwa-app/dist/`
+- rsync target: `/var/www/billing/packages/pwa-app/dist/`
+
+### CI/CD
+- **GitHub Actions** — `.github/workflows/build.yml`
+  - Triggered on `v*` tags + `workflow_dispatch`
+  - Builds Windows (NSIS), Mac (DMG x64 + arm64), PWA
+  - Uploads artifacts (30-day retention)
+  - Creates GitHub Release with attached installers on tag push
+
+### Release Artifacts
+| Platform | Artifact |
+|---|---|
+| Windows | `ShopBill-Setup-{version}.exe` |
+| Mac Intel | `ShopBill-{version}-x64.dmg` |
+| Mac Apple Silicon | `ShopBill-{version}-arm64.dmg` |
+| PWA | `dist/` folder rsynced to Hetzner |
+
+---
+
+## 🧪 Testing
+
+- **Playwright** — E2E tests (`e2e/` directory), `@playwright/test 1.58`
+- **Web Audio API** — Sound effects tested via `useSoundEffects` hook
+- TypeScript strict mode catches type errors at build time across all 3 packages
+
+---
+
+## 📦 Tech Stack Summary
+
+| Layer | Technology |
+|---|---|
+| Desktop shell | Electron 33 |
+| UI framework | React 18, Vite 6, TypeScript 5.6 |
+| Styling | Tailwind CSS 3, CSS variables, DM Sans + DM Mono |
+| State | Zustand 5 |
+| Routing | React Router DOM v6 |
+| i18n | i18next 23 — 6 languages (EN, HI, KN, MR, TE, TA) |
+| Local DB | better-sqlite3 11 (WAL mode), 10 migrations |
+| Printing | node-thermal-printer 4.6 (ESC/POS), browser fallback |
+| Barcode | html5-qrcode (scan), jsbarcode (render) |
+| QR | qrcode (UPI QR on receipts) |
+| Excel | xlsx 0.18 (import/export) |
+| Cloud backend | Django 5.1, DRF 3.15, JWT, Gunicorn |
+| Cloud DB | PostgreSQL (prod), SQLite (dev) |
+| Sync | Custom push/pull delta sync engine |
+| Packaging | electron-builder 25 (NSIS, DMG, AppImage) |
+| CI/CD | GitHub Actions + GitHub Releases |
+| Infra | Hetzner VPS, nginx, Let's Encrypt SSL |
+| Testing | Playwright E2E |
+| Monorepo | npm workspaces |
+
+
+project no 12 : # SSMS — Technical Stack & Architecture
+
+> Salon & Spa Management System — Multi-tenant, Role-based, Production-ready
+
+---
+
+## 🏗️ Architecture Overview
+
+Full-stack monorepo SaaS platform with real-time queue management, GST billing, loyalty engine, and a customer mobile app.
+
+```
+┌──────────────────────────────────────────────────────┐
+│            Next.js 14 Admin Dashboard (Web)           │
+├──────────────────────────────────────────────────────┤
+│          React Native / Expo Customer App (Mobile)    │
+├──────────────────────────────────────────────────────┤
+│       Express + tRPC v11 API + Socket.io Gateway      │
+├──────────────────────────────────────────────────────┤
+│   Express Print Server (Thermal ESC/POS — local PC)   │
+├─────────────────────┬────────────────────────────────┤
+│     PostgreSQL 16   │  Redis 7 (sessions + queues)    │
+└─────────────────────┴────────────────────────────────┘
+```
+
+---
+
+## 📦 Monorepo Structure
+
+- **Tooling:** Turborepo 2 + npm workspaces
+- **Language:** TypeScript 5.5 everywhere (strict)
+- **Package manager:** npm 11
+
+```
+apps/
+  api/           → Express + tRPC v11 server          :4000
+  admin/         → Next.js 14 App Router dashboard    :3002
+  print-server/  → Thermal printer ESC/POS daemon     :3100
+  customer-app/  → React Native Expo ~52 mobile app
+packages/
+  db/            → Prisma schema + generated client   (@salon/db)
+  shared/        → Types, constants, utils            (@salon/shared)
+```
+
+---
+
+## 🎨 Frontend — Next.js Admin Dashboard
+
+### Core Framework
+- **Next.js 14** — App Router, Server Components, layout groups
+- **React 18** — Functional components, hooks
+- **TypeScript 5.5** — Strict type safety
+
+### UI & Styling
+- **Tailwind CSS 3** — Utility-first styling with custom `navy-*` design tokens
+- **Design System** — "Clean Navy" (`#0c447c` nav, `#185fa5` accent, `#f4f6fb` page bg)
+- **No shadows** — Depth via border contrast (`#c8d2e8`, 0.5px)
+- **Lucide React** — Icon library (only icon lib used)
+- **Recharts 3** — Charts and analytics graphs
+- **qrcode.react** — QR code generation (digital menu, self check-in)
+
+### State & Data Fetching
+- **Zustand 5** — Auth store (persisted to `localStorage`)
+- **tRPC v11 Client** — End-to-end typesafe API calls
+- **TanStack Query v5** — Server state, caching, background refetch
+- **Zod 3** — Schema validation (shared with API)
+
+### Real-time
+- **Socket.io Client 4** — Live queue updates, KDS, billing events
+
+### Key Modules
+| Module | Description |
+|---|---|
+| Dashboard | Live sales, worker status, today's metrics |
+| Appointments | Calendar, slot booking, worker assignment |
+| Queue Management | Walk-in tokens, self check-in QR, live display |
+| Billing | GST-ready bills, refunds, payment events |
+| Workers | Shifts, leaves, commission ledger, salary cycles |
+| Customers | Profiles, loyalty points, memberships, family groups |
+| Services & Products | Catalog, pricing, inventory |
+| Loyalty Engine | Points, tiers, memberships, referrals |
+| Consent Forms | Digital consent templates and signed records |
+| Expenses | Operational expense tracking |
+| Reports | Sales, tax, audit log, commissions |
+| Settings | Salon profile, tax config, staff roles |
+
+---
+
+## 📱 Mobile — React Native Customer App
+
+### Core Framework
+- **Expo ~52** — Managed workflow, Expo Go for dev
+- **React Native 0.76** — Cross-platform iOS & Android
+- **TypeScript 5.5** — Strict
+
+### Navigation
+- **React Navigation 6** — Stack + bottom tab navigator
+- **react-native-screens 4** — Native screen containers
+- **react-native-safe-area-context** — Safe area insets
+
+### UI & Styling
+- **Plain StyleSheet** — No Tailwind; theme via `colors.ts` constants
+- **Design tokens** — Same palette as admin (`#0c447c`, `#185fa5`, etc.)
+- **Lucide React Native** — Icon library
+- **react-native-svg 15** — SVG rendering
+- **react-native-reanimated 3** — Smooth animations
+- **react-native-gesture-handler 2** — Gesture support
+
+### State & Data
+- **Zustand 5** — Auth store (persisted via `expo-secure-store`)
+- **tRPC v11 Client** — Type-only import; Metro never bundles server deps
+- **TanStack Query v5** — Server state
+
+### Auth
+- **expo-secure-store** — JWT stored in device keychain
+- **OTP login** — Customer upsert + 6-digit OTP (no password)
+- **JWT hydration** — Token parsed on launch, expiry checked client-side
+
+### Key Screens
+| Screen | Description |
+|---|---|
+| Login | Phone + OTP, demo mode |
+| Home | Salon info, quick actions |
+| Queue | Self check-in, live token status |
+| Appointments | Book, view, cancel slots |
+| Digital Menu | QR-linked service catalog |
+| Loyalty | Points balance, transaction history |
+| Membership | Active plan, benefits |
+| Profile | Personal details, preferences |
+
+---
+
+## ⚙️ Backend — Express + tRPC API
+
+### Core Framework
+- **Express 4** — HTTP server
+- **tRPC v11** — End-to-end typesafe RPC (no REST endpoints for app data)
+- **TypeScript 5.5** — Strict
+- **Zod 3** — Input validation on all procedures
+
+### Procedure Hierarchy
+```
+publicProcedure      → no auth
+protectedProcedure   → valid JWT + live active_sessions row
+  adminProcedure     → role: ADMIN
+  billingProcedure   → role: ADMIN | BILLING
+  workerProcedure    → role: ADMIN | WORKER
+```
+Customer routes use `protectedProcedure` with inline `role === "CUSTOMER"` checks.
+
+### Auth & Security
+- **jsonwebtoken 9** — JWT signing (`HS256`)
+- **Session-based invalidation** — `active_sessions` table; deleting the row revokes the token instantly
+- **Session limits** — Worker=1, Billing=2, Admin=∞, Customer=5
+- **OTP flow** — 6-digit codes stored in `otpCodes` table, time-limited
+- **CORS** — Configured per environment
+
+### Real-time
+- **Socket.io 4** — Rooms by `salon:{salonId}`; JWT auth on handshake
+- **Singleton pattern** — `setIo/getIo/emitToSalon` prevents circular imports
+
+### Background Jobs
+- **BullMQ 5** — Job queue for async tasks (reminders, follow-ups, failed jobs retry)
+- **ioredis 5** — Redis client (BullMQ transport + session cache)
+
+### Other
+- **xmlbuilder2** — Tally XML export for accounting
+- **dotenv** — Single `.env` at repo root
+
+---
+
+## 🖨️ Print Server
+
+- **Express 4** — HTTP daemon running on billing PC at `:3100`
+- **node-thermal-printer 4** — ESC/POS commands to USB/TCP thermal printer
+- **Health endpoint** — `GET /health` (admin dashboard polls every 5 s)
+- **Print endpoint** — `POST /print` → ESC/POS receipt
+- **Offline queue** — `pending_prints` (IndexedDB in admin browser) for print failures
+
+---
+
+## 🗄️ Database & ORM
+
+- **PostgreSQL 16** — Primary data store (port 5433 local dev)
+- **Prisma 5** — ORM, migrations, seeding, Prisma Studio
+- **Multi-tenancy** — Every table has `salonId` column
+- **Wire type safety** — Prisma `Decimal`/`Date` → mapped to `string` before tRPC response
+- **Audit log** — Every mutation writes `{ salonId, userId, role, action, entity, entityId, oldValues, newValues, ipAddress }`
+- **GST invoice sequencing** — `SELECT ... FOR UPDATE` atomic sequence with financial-year rollover
+
+### Schema Phases
+| Phase | Tables Added |
+|---|---|
+| 1 — Core MVP | `salons`, `users`, `customers`, `services`, `workers`, `bills`, `billItems`, `auditLogs`, `otpCodes`, `activeSessions` |
+| 2 — Money/GST | `products`, `refunds`, `customerCredits`, `creditTxns`, `invoiceSequences`, `invoiceAllocations`, `paymentEvents`, `consentTemplates`, `consentForms`, `expenses`, `commissionLedger`, `salaryCycles` |
+| 3 — Loyalty | `loyaltyPoints`, `loyaltyTransactions`, `memberships`, `membershipPlans`, `membershipTransactions`, `familyGroups`, `familyMembers`, `referralCodes`, `referralEvents`, `reminders`, `followUps`, `reviews`, `failedJobs` |
+
+---
+
+## 🔐 Security
+
+- JWT access tokens + server-side session invalidation (no expiry wait)
+- OTP-based login — no passwords for customers or workers
+- Role-based access control (ADMIN / BILLING / WORKER / CUSTOMER)
+- `ipAddress` captured on every tRPC request, stored in audit log
+- Secrets in repo-root `.env` (never committed)
+- Prisma parameterized queries — no raw SQL injection risk
+
+---
+
+## 🚀 Infrastructure & Deployment
+
+### Local Dev
+| Service | Port | Notes |
+|---|---|---|
+| API | 4000 | ts-node-dev hot reload |
+| Admin | 3002 | Next.js dev server |
+| Print Server | 3100 | ts-node-dev |
+| Customer App | 8082 | Expo Go LAN QR |
+| PostgreSQL | 5433 | Docker container |
+| Redis | 6379 | Docker container |
+
+### Production
+- **API + DB:** Docker Compose on Hetzner VPS behind Nginx + SSL (Certbot)
+- **Admin:** Vercel (free tier), env `NEXT_PUBLIC_API_URL=https://api.yourdomain.com`
+- **Mobile:** Expo EAS Build → Play Store / App Store; JS-only OTA updates
+- **Print Server:** Installed locally on billing PC (not on cloud)
+
+---
+
+## 🧰 Developer Tooling
+
+- **Turborepo 2** — Parallel builds, dependency-ordered pipeline, caching
+- **ESLint 8** — TypeScript-aware linting (`@typescript-eslint`)
+- **Prettier 3** — Consistent formatting across all packages
+- **ts-node-dev** — API/print-server dev with hot reload
+- **Prisma Studio** — Visual DB browser (`npx prisma studio`)
+
+---
+
+## 📊 Tech Stack Summary
+
+| Layer | Technology |
+|---|---|
+| Monorepo | Turborepo 2, npm workspaces |
+| Language | TypeScript 5.5 (strict, everywhere) |
+| Admin Web | Next.js 14 App Router, React 18, Tailwind CSS 3, Zustand 5 |
+| Mobile | React Native 0.76, Expo ~52, Expo Go |
+| API | Express 4, tRPC v11, Zod 3 |
+| Real-time | Socket.io 4 (rooms by salonId) |
+| Background Jobs | BullMQ 5, ioredis 5 |
+| Database | PostgreSQL 16, Prisma 5 |
+| Cache / Sessions | Redis 7 |
+| Auth | JWT (jsonwebtoken 9), OTP login, server-side session invalidation |
+| Charts | Recharts 3 |
+| Icons | Lucide React / Lucide React Native |
+| Print | node-thermal-printer 4, ESC/POS |
+| Infra | Hetzner VPS, Docker, Nginx, Certbot SSL |
+| Mobile Distribution | Expo EAS Build, Play Store, App Store |
+| Accounting Export | xmlbuilder2 (Tally XML) |
+| Tooling | ESLint 8, Prettier 3, ts-node-dev |
