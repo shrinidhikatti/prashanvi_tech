@@ -113,7 +113,7 @@ export function Contact() {
                 <div className="cp-detail-icon"><Mail size={18} /></div>
                 <div>
                   <span className="cp-detail-label">Email</span>
-                  <p className="cp-detail-value">prashanvitech@gmail.com</p>
+                  <p className="cp-detail-value">contact@prashanvitech.com</p>
                 </div>
               </div>
               <div className="cp-detail-row">

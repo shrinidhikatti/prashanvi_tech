@@ -24,7 +24,7 @@ export function Footer() {
           <div className="footer-col">
             <h4 className="footer-col-heading">Get In Touch</h4>
             <ul className="footer-nav">
-              <li><span>prashanvitech@gmail.com</span></li>
+              <li><span>contact@prashanvitech.com</span></li>
               <li><span>+91 7760437800</span></li>
             </ul>
           </div>
