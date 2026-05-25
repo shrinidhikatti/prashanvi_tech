@@ -18,10 +18,19 @@ export function Portfolio() {
       title: 'ERP Enterprise Resource Planning',
       category: 'Enterprise Solution',
       match: 'Enterspice',
-      description: 'Comprehensive resource management system for large-scale operations.',
+      description: 'A full-stack ERP system built for a precision foundry manufacturing company to manage their entire production workflow digitally — from customer work orders and raw material inventory to production batch tracking, foundry heat number assignment, quality inspection, and delivery challans.',
       gradient: 'linear-gradient(135deg, #FF6B6B 0%, #EE5D6C 100%)',
       url: 'https://erp.vishwaengineers.com/login',
       image: vishwaengImg,
+      features: [
+        'Customer Work Orders',
+        'Raw Material Inventory',
+        'Production Batch Tracking',
+        'Foundry Heat Number Assignment',
+        'Quality Inspection',
+        'Delivery Challans'
+      ],
+      roles: ['Owner', 'Admin', 'Production Manager', 'Worker', 'Foundry', 'Quality Inspector', 'Store Keeper', 'Purchase Manager', 'Dispatch Manager'],
       techStack: {
         frontend: ['React 19', 'TypeScript', 'Vite', 'Tailwind CSS', 'Lucide React', 'Recharts'],
         backend: ['Node.js', 'Express', 'PostgreSQL (Neon)', 'TypeScript'],
@@ -245,6 +254,28 @@ export function Portfolio() {
             </div>
 
             <div className="tech-grid">
+              {selectedProject.features && (
+                <div className="tech-section">
+                  <div className="tech-label">Key Features</div>
+                  <div className="tech-tags">
+                    {selectedProject.features.map((feature, i) => (
+                      <span key={i} className="tech-tag feature">{feature}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {selectedProject.roles && (
+                <div className="tech-section">
+                  <div className="tech-label">User Roles (9)</div>
+                  <div className="tech-tags">
+                    {selectedProject.roles.map((role, i) => (
+                      <span key={i} className="tech-tag role">{role}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {selectedProject.techStack.frontend && (
                 <div className="tech-section">
                   <div className="tech-label">Frontend</div>
@@ -953,6 +984,30 @@ export function Portfolio() {
         .tech-tag.other:hover {
           box-shadow: 0 8px 30px rgba(148, 163, 184, 0.3),
                       0 0 40px rgba(148, 163, 184, 0.2);
+        }
+
+        .tech-tag.feature {
+          background: rgba(52, 211, 153, 0.15);
+          color: rgba(110, 231, 183, 1);
+          border-color: rgba(52, 211, 153, 0.4);
+          box-shadow: 0 4px 20px rgba(52, 211, 153, 0.15);
+        }
+
+        .tech-tag.feature:hover {
+          box-shadow: 0 8px 30px rgba(52, 211, 153, 0.3),
+                      0 0 40px rgba(52, 211, 153, 0.2);
+        }
+
+        .tech-tag.role {
+          background: rgba(251, 191, 36, 0.15);
+          color: rgba(253, 211, 77, 1);
+          border-color: rgba(251, 191, 36, 0.4);
+          box-shadow: 0 4px 20px rgba(251, 191, 36, 0.15);
+        }
+
+        .tech-tag.role:hover {
+          box-shadow: 0 8px 30px rgba(251, 191, 36, 0.3),
+                      0 0 40px rgba(251, 191, 36, 0.2);
         }
 
         @media (max-width: 1200px) {
