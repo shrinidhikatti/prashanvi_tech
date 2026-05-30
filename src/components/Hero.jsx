@@ -36,7 +36,7 @@ const DigitalExperience = () => {
           clearInterval(interval);
           setTimeout(() => setPhase('assembling'), 500);
         }
-      }, 30); // Typing speed
+      }, 15); // Typing speed
       return () => clearInterval(interval);
     }
   }, [phase]);
