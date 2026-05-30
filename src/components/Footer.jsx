@@ -1,4 +1,4 @@
-import { Linkedin, Twitter, Instagram } from 'lucide-react';
+import { Linkedin, Facebook, Instagram } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -32,9 +32,9 @@ export function Footer() {
           <div className="footer-col">
             <h4 className="footer-col-heading">Follow Us</h4>
             <div className="footer-socials">
-              <a href="#" aria-label="LinkedIn"><Linkedin size={18} /></a>
-              <a href="#" aria-label="Twitter"><Twitter size={18} /></a>
-              <a href="#" aria-label="Instagram"><Instagram size={18} /></a>
+              <a href="https://www.linkedin.com/company/prashanvitech" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Linkedin size={18} /></a>
+              <a href="https://www.facebook.com/prashanvitech" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><Facebook size={18} /></a>
+              <a href="https://www.instagram.com/prashanvitech" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><Instagram size={18} /></a>
             </div>
           </div>
         </div>
