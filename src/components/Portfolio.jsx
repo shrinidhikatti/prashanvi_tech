@@ -18,7 +18,7 @@ export function Portfolio() {
       title: 'ERP Enterprise Resource Planning',
       category: 'Enterprise Solution',
       match: 'Enterspice',
-      description: 'A full-stack ERP system built for a precision foundry manufacturing company to manage their entire production workflow digitally — from customer work orders and raw material inventory to production batch tracking, foundry heat number assignment, quality inspection, and delivery challans.',
+      description: 'A full-stack ERP system for a precision foundry — digitally managing work orders, raw material inventory, production batches, quality inspection, and delivery challans.',
       gradient: 'linear-gradient(135deg, #FF6B6B 0%, #EE5D6C 100%)',
       url: 'https://erp.vishwaengineers.com/login',
       image: vishwaengImg,
