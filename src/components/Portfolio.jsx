@@ -22,6 +22,7 @@ export function Portfolio() {
       gradient: 'linear-gradient(135deg, #FF6B6B 0%, #EE5D6C 100%)',
       url: 'https://erp.vishwaengineers.com/login',
       image: vishwaengImg,
+      imagePosition: 'top left',
       features: [
         'Customer Work Orders',
         'Raw Material Inventory',
@@ -179,7 +180,7 @@ export function Portfolio() {
           {projects.map((project, index) => (
             <div key={index} className="project-card">
               <div className="project-preview">
-                <img src={project.image} alt={project.title} className="project-image" />
+                <img src={project.image} alt={project.title} className="project-image" style={project.imagePosition ? { objectPosition: project.imagePosition } : {}} />
                 <div className="image-overlay"></div>
               </div>
 
