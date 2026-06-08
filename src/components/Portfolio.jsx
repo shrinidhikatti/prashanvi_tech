@@ -6,7 +6,7 @@ import horoscopeImg from '../assets/horoscope.jpeg';
 import shaktiImg from '../assets/shakti.jpeg';
 import quickImg from '../assets/quick.png';
 import cakeImg from '../assets/mrcake4.png';
-import homaImg from '../assets/homa.png';
+import homaImg from '../assets/homa-cover.png';
 
 
 
@@ -135,6 +135,7 @@ export function Portfolio() {
       gradient: 'linear-gradient(135deg, #FF9A56 0%, #FF6B6B 100%)',
       url: '#',
       image: homaImg,
+      imagePosition: 'top left',
       techStack: {
         frontend: ['React 18', 'Material-UI v5', 'React Big Calendar', 'date-fns', '@mui/icons-material'],
         backend: ['Firebase 10.1', 'Cloud Firestore', 'Firebase Authentication', 'Firebase Hosting'],
