@@ -133,7 +133,7 @@ export function Portfolio() {
       match: 'Ritual Booking',
       description: 'Online platform for booking Hindu religious ceremonies and rituals.',
       gradient: 'linear-gradient(135deg, #FF9A56 0%, #FF6B6B 100%)',
-      url: '#',
+      url: 'https://astrovastushrivmjoshi.com/booking-homa/',
       image: homaImg,
       imagePosition: 'top left',
       techStack: {
