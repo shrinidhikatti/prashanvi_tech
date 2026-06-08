@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import vishwaengImg from '../assets/vishwaeng.jpeg';
+import vishwaengImg from '../assets/vishwa-cover.png';
 import sagarImg from '../assets/sagar2.jpeg';
 import preraneImg from '../assets/prerane2.jpeg';
 import horoscopeImg from '../assets/horoscope.jpeg';
