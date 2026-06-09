@@ -147,12 +147,12 @@ export function Portfolio() {
       }
     },
     {
-      title: 'MrCake Bakers',
+      title: 'MrCake House',
       category: 'E-Commerce',
       match: 'Bakery',
       description: 'Custom cake ordering platform with design customization and delivery tracking.',
       gradient: 'linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%)',
-      url: '#',
+      url: 'https://mrcakehouse.com/',
       image: cakeImg,
       techStack: {
         frontend: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'Lucide React', 'Leaflet'],
